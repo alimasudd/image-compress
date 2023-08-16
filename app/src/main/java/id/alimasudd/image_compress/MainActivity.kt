@@ -10,25 +10,29 @@ import android.os.Environment
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import id.alimasudd.image_compress.R
+import id.alimasudd.image_compress.databinding.ActivityMainBinding
 import id.alimasudd.image_compress.utils.CompressImage
 import id.alimasudd.image_compress.utils.FileUtil.from
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.IOException
 import java.text.DecimalFormat
 import java.util.*
 
+
 class   MainActivity : AppCompatActivity() {
     var insertImage: File? = null
     var compressImage: File? = null
 
+    lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        imageInsert.setBackgroundColor(getRandomColor())
+        binding.imageInsert.setBackgroundColor(getRandomColor())
         setClickButton()
         setClearImage()
     }
@@ -37,14 +41,14 @@ class   MainActivity : AppCompatActivity() {
     private fun setClickButton() {
 
         //insert gambar
-        btnInsert.setOnClickListener {
+        binding.btnInsert.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "image/*"
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
         }
 
         //kompres gambar
-        btnCompress.setOnClickListener {
+        binding.btnCompress.setOnClickListener {
             if (insertImage == null) {
                 Toast.makeText(this@MainActivity, "Please choose an image!",
                     Toast.LENGTH_SHORT).show()
@@ -59,9 +63,9 @@ class   MainActivity : AppCompatActivity() {
                     .subscribe({ file ->
                         compressImage = file
                         val bitmapImage = BitmapFactory.decodeFile(compressImage!!.absolutePath)
-                        imageCompress.setImageBitmap(bitmapImage)
+                        binding.imageCompress.setImageBitmap(bitmapImage)
 
-                        tvSizeAfter.text = String.format("Size : %s",
+                        binding.tvSizeAfter.text = String.format("Size : %s",
                             getReadableFileSize(compressImage!!.length()))
 
                         Toast.makeText(this@MainActivity,
@@ -74,7 +78,7 @@ class   MainActivity : AppCompatActivity() {
         }
 
         //custom
-        btnCustom.setOnClickListener {
+        binding.btnCustom.setOnClickListener {
             if (insertImage == null) {
                 Toast.makeText(this@MainActivity,
                     "Please choose an image!", Toast.LENGTH_SHORT).show()
@@ -91,9 +95,9 @@ class   MainActivity : AppCompatActivity() {
                         .compressToFile(insertImage!!)
 
                     val bitmapImage = BitmapFactory.decodeFile(compressImage!!.absolutePath)
-                    imageCompress.setImageBitmap(bitmapImage)
+                    binding.imageCompress.setImageBitmap(bitmapImage)
 
-                    tvSizeAfter.text = String.format("Size : %s", getReadableFileSize(compressImage!!.length()))
+                    binding.tvSizeAfter.text = String.format("Size : %s", getReadableFileSize(compressImage!!.length()))
                     Toast.makeText(this@MainActivity,
                         "Compressed image save in " + compressImage!!.path, Toast.LENGTH_LONG).show()
                 } catch (e: IOException) {
@@ -105,10 +109,10 @@ class   MainActivity : AppCompatActivity() {
     }
 
     private fun setClearImage() {
-        imageInsert.setBackgroundColor(getRandomColor())
-        imageCompress.setImageDrawable(null)
-        imageCompress.setBackgroundColor(getRandomColor())
-        tvSizeAfter.text = "Size : -"
+        binding.imageInsert.setBackgroundColor(getRandomColor())
+        binding.imageCompress.setImageDrawable(null)
+        binding.imageCompress.setBackgroundColor(getRandomColor())
+        binding.tvSizeAfter.text = "Size : -"
     }
 
     private fun getRandomColor(): Int {
@@ -127,13 +131,13 @@ class   MainActivity : AppCompatActivity() {
             }
             try {
                 insertImage = from(this, data.data!!)
-                imageInsert.setImageBitmap(BitmapFactory.decodeFile(insertImage?.absolutePath))
-                tvSizeBefore.text = String.format("Size : %s", getReadableFileSize(insertImage!!.length()))
+                binding.imageInsert.setImageBitmap(BitmapFactory.decodeFile(insertImage?.absolutePath))
+                binding.tvSizeBefore.text = String.format("Size : %s", getReadableFileSize(insertImage!!.length()))
 
-                imageInsert.setBackgroundColor(getRandomColor())
-                imageCompress.setImageDrawable(null)
-                imageCompress.setBackgroundColor(getRandomColor())
-                tvSizeAfter.text = "Size : -"
+                binding.imageInsert.setBackgroundColor(getRandomColor())
+                binding.imageCompress.setImageDrawable(null)
+                binding.imageCompress.setBackgroundColor(getRandomColor())
+                binding.tvSizeAfter.text = "Size : -"
             } catch (e: IOException) {
                 Toast.makeText(this@MainActivity,
                     "Failed to read picture data!", Toast.LENGTH_SHORT).show()
