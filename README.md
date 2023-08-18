@@ -1,1 +1,1 @@
-### compress-image
+### image-compress
