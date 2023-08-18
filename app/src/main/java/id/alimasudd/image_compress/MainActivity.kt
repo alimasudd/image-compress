@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package id.alimasudd.image_compress
 
 import android.annotation.SuppressLint
@@ -9,7 +11,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import id.alimasudd.image_compress.R
 import id.alimasudd.image_compress.databinding.ActivityMainBinding
 import id.alimasudd.image_compress.utils.CompressImage
 import id.alimasudd.image_compress.utils.FileUtil.from
